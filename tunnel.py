@@ -1,7 +1,7 @@
 from typing import Dict
 import pygame
 from Enemy import Enemy
-from Player import Player
+from Player import Bard, Fighter, Player, Sorceror
 from Scene import Scene
 from Tile import Tile
 import itertools
@@ -21,13 +21,14 @@ player_type = random.randrange(1, 4)
 PLAYER_BATTLE_IMAGE = f"assets/player_images/student{player_type}.png"
 PLAYER_TUNNEL_IMAGE = f"assets/player_images/student_tunnel{player_type}.png"
 PLAYER_SPOT = (SCREEN_SIZE[0] * 0.1, SCREEN_SIZE[1] * 0.5)
-
+PlayerClass = [Fighter, Bard, Sorceror][player_type - 1]
+print(PlayerClass)
 tilegrid = {
     (x, y): Tile(x, y, random.choice(["purple", "grey"]), TILESIZE) 
         for x,y in itertools.product(range(19), range(9))
         if (x+1) % 2 or (y+1) % 2
 }
-player = Player(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
+player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
 tile_objects_where_monsters_will_appear = random.sample(list(
     filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), 10)
