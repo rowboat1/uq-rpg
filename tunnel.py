@@ -29,10 +29,6 @@ PlayerClass = [Fighter, Bard, Sorceror][class_selection - 1]
 
 player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
-       
-
-
-
 N_MONSTERS = 10
 MONSTER_IMAGES = list(map(lambda x: 
             pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
@@ -85,6 +81,11 @@ if __name__ == "__main__":
                         new_loc = scene.tilegrid.get(target_location, None)
                         if new_loc:
                             player.set_location(target_location)
+
+                            #check if collision is at end
+                            if new_loc = (GRID_W, GRID_H)
+
+                            # check for collision with enemy
                             collided_entity = check_collisions(new_loc)
                             if collided_entity:
                                 collision_event = collided_entity.on_collision()
@@ -92,6 +93,7 @@ if __name__ == "__main__":
                                     collision_event["type"], 
                                     collision_event["entities"]
                                 )
+
                 elif scene.type == "battle":
                     if awaiting_player_move:
                         result = None

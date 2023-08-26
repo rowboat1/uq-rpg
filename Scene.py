@@ -8,14 +8,17 @@ from Tile import Tile
 from constants import *
 
 
+GRID_W = 19
+GRID_H = 8
+
 class Grid:
 
     def __init__(self):
 
         self.dict = {}
 
-        self.grid_width = 19
-        self.grid_height = 8
+        self.grid_width = GRID_W
+        self.grid_height = GRID_H
 
         self.standard_colours = [pygame.Color(35, 15, 20), pygame.Color(25, 30, 25), pygame.Color(20, 35, 35)]
 
