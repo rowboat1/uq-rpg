@@ -3,7 +3,7 @@ import itertools
 import random
 import pygame
 
-from entities import DownStair, Enemy, UpStair
+from entities import DownStair, Enemy, Potion, UpStair
 from Tile import Tile
 from constants import *
 from alert import Alert
@@ -132,6 +132,15 @@ class Campaign(Scene):
         for i, tile in enumerate(tile_objects_where_monsters_will_appear):
             new_monster = Enemy(monster_images[i % len(monster_images)])
             self.monster_dict[tile] = new_monster
+
+        self.potion_dict = {}
+        valid_potion_tiles = [
+            tile for tile in self.tilegrid.values() if 
+                    tile not in self.monster_dict.keys() 
+                and tile not in self.stair_dict.keys()
+        ]
+        for tile in random.sample(valid_potion_tiles, 5):
+            self.potion_dict[tile] = Potion(pygame.image.load("assets/potion.png"))
 
     
     def check_colliders(self, new_loc):

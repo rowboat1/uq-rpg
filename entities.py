@@ -1,5 +1,15 @@
 import random
 
+class Potion:
+    def __init__(self, image):
+        self.image = image
+
+    def on_collision(self):
+        return {
+            "type": "heal",
+            "entities": None
+        }
+
 class Enemy:
     def __init__(self, image):
         self.max_health = 12
