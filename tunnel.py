@@ -11,7 +11,10 @@ pygame.font.init()
 font = pygame.font.Font(None, 30)
 TILESIZE = 80
 ORIGINAL_SIZE = (960, 736)
-
+BATTLE_BACKGROUND = pygame.image.load("tunnels_background.jpg")
+SCREEN_SIZE = (main_s.get_size())
+BATTLE_BACKGROUND = pygame.transform.scale(BATTLE_BACKGROUND, SCREEN_SIZE)
+ENEMY_SPOT = (SCREEN_SIZE[0] * 0.65, SCREEN_SIZE[1] * 0.1)
 
 tilegrid = {
     (x, y): Tile(x, y, random.choice(["purple", "grey"]), TILESIZE) 
@@ -20,16 +23,18 @@ tilegrid = {
 }
 player = Player(TILESIZE / 2)
 
-monster_tiles = random.sample(list(
+tile_objects_where_monsters_will_appear = random.sample(list(
     filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), 10)
 monster_images = list(map(pygame.image.load, [
     "repogotchi1.png", "repogotchi2.png", "repogotchi3.png", "repogotchi4.png",
 ]))
-monster_dict = dict(zip(monster_tiles, map(
-    lambda x: Enemy(
+# Gives us a dictionary of tile: monster pairs, equally distributing our 
+# limited list of monster images
+monster_dict = dict(zip(tile_objects_where_monsters_will_appear, map(
+    lambda image: Enemy(
         random.randrange(6, 15), 
         random.randrange(6, 15), 
-        x
+        image
     )
     , itertools.cycle(monster_images))))
 
@@ -85,12 +90,21 @@ if __name__ == "__main__":
                                 )
                 elif scene.type == "battle":
                     pass
-        main_s.fill("black")
-        mp = pygame.mouse.get_pos()
-        for tile in tilegrid.values():
-            pygame.draw.rect(main_s, tile.color, tile.rect)
-        player.rect.center = tilegrid[player.location].rect.center
-        pygame.draw.rect(main_s, "orange", player.rect)
-        for tile, monster in monster_dict.items():
-            main_s.blit(pygame.transform.scale(monster.image, (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), tile.rect.topleft)
+        if scene.type == "tunnels":
+            main_s.fill("black")
+            mp = pygame.mouse.get_pos()
+            for tile in tilegrid.values():
+                pygame.draw.rect(main_s, tile.color, tile.rect)
+            player.rect.center = tilegrid[player.location].rect.center
+            pygame.draw.rect(main_s, "orange", player.rect)
+            for tile, monster in monster_dict.items():
+                main_s.blit(pygame.transform.scale(monster.image, 
+                    (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
+                    tile.rect.topleft)
+        elif scene.type == "battle":
+            main_s.blit(BATTLE_BACKGROUND, (0,0))
+            main_s.blit(pygame.transform.scale(
+                scene.entities[0].image, 
+                (SCREEN_SIZE[0] * 0.25, SCREEN_SIZE[1] * 0.25)
+            ), (ENEMY_SPOT))
         pygame.display.flip()
