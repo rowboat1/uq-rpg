@@ -120,15 +120,13 @@ tilegrid = Grid().export()
 
 
 N_MONSTERS = 10
+MONSTER_IMAGES = list(map(lambda x: 
+            pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
 
 tile_objects_where_monsters_will_appear = random.sample(list(
     filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), N_MONSTERS)
-MONSTER_IMAGES = list(map(lambda x: 
-            pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
 # Gives us a dictionary of tile: monster pairs, equally distributing our 
 # limited list of monster images
-
-
 monster_dict: Dict[Tile, Enemy] = dict(zip(
     tile_objects_where_monsters_will_appear, 
     map(lambda image: Enemy(
