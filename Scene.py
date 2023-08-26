@@ -9,7 +9,6 @@ from constants import *
 from alert import Alert
 
 class Grid:
-
     def __init__(self):
 
         self.dict = {}
@@ -141,8 +140,6 @@ class Campaign(Scene):
         monster = self.monster_dict.get(new_loc, None)
         if monster:
             return monster
-        print(new_loc)
-        print(self.stair_dict.keys())
         stair = self.stair_dict.get(new_loc, None)
         if stair:
             return stair
@@ -161,7 +158,7 @@ class Battle(Scene):
 
     def damage_enemy(self, damage):
         enemy = self.entities[0]
-        self.alerts.append(Alert(str(damage), "red", 150, self.ENEMY_SPOT))
+        self.alerts.append(Alert(str(damage), "red", 50, self.ENEMY_SPOT))
         return enemy.set_current_health(enemy.current_health - damage)
 
     def get_whose_turn(self):
@@ -232,6 +229,7 @@ class Battle(Scene):
         )
 
         self.process_alerts(main_s)
+        pygame.display.flip()
 
     def process_alerts(self, main_s):
         for i, alert in enumerate(self.alerts):

@@ -10,6 +10,21 @@ class Player:
         self.tunnel_image = tunnel_image
         self.max_health = 60
         self.current_health = 60
+        self.experience_threshold = 10
+        self.current_experience = 0
+        self.level = 1
+
+    def level_up(self):
+        self.level += 1
+        self.max_health += 5
+        self.set_current_health(self.current_health + 10)
+        self.current_experience = 0
+        self.experience_threshold = 10 + self.level * 5
+
+    def set_current_experience(self, xp):
+        self.current_experience = min(xp, self.experience_threshold)
+        if self.current_experience == self.experience_threshold:
+            self.level_up()
 
     def get_rage_counter(self):
         return 0
@@ -22,6 +37,9 @@ class Player:
 
     def get_health_ratio(self):
         return self.current_health / self.max_health
+    
+    def take_damage(self):
+        pass
 
     def set_current_health(self, health):
         self.current_health = min(self.max_health, health)
@@ -59,6 +77,10 @@ class Fighter(Player):
         self.battle_actions = ["rage", "punch", "heal"]
         self.rage_counter = 1
 
+    def level_up(self):
+        super().level_up()
+        self.rage_counter = self.level
+
     def get_rage_counter(self):
         return self.rage_counter
 
@@ -67,9 +89,11 @@ class Fighter(Player):
 
     def punch(self):
         damage_bonus = self.rage_counter ** 2 + (10 if self.current_health < 10 else 0)
-        self.rage_counter = 1
+        self.rage_counter = self.level
+        damage_dealt = random.randrange(2, 6) + damage_bonus
+        print(f"Damage: {damage_dealt}")
         return {
-            "damage": random.randrange(2, 6) + damage_bonus
+            "damage": damage_dealt
         }
 
     def heal(self):

@@ -6,7 +6,7 @@ class Alert:
         self.colour = colour
         self.expiry = expiry
         self.location = location
-        self.yincrement = 0.1
+        self.yincrement = 0.5
     
     def draw(self, surface):
         alert_text = font.render(self.message, True, self.colour)

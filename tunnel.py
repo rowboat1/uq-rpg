@@ -99,7 +99,6 @@ if __name__ == "__main__":
                             collided_entity = check_collisions(new_loc)
                             if collided_entity:
                                 collision_event = collided_entity.on_collision()
-                                print(collided_entity)
                                 set_scene(
                                     collision_event["type"], 
                                     collision_event["entities"]
@@ -124,6 +123,11 @@ if __name__ == "__main__":
                                 player.set_current_health(
                                     player.current_health + 3
                                 )
+                                player.set_current_experience(
+                                    player.current_experience + 2
+                                )
+                                while scene.alerts:
+                                    scene.draw(main_s, SCREEN_SIZE, player, BATTLE_BACKGROUND)
                                 pop_scene(new_dead = scene.entities)
                                 continue
                         if not awaiting_player_move:
@@ -143,7 +147,7 @@ if __name__ == "__main__":
             enemy = scene.entities[0]
             turn_taker = scene.get_whose_turn()
             awaiting_player_move = turn_taker == player
-            if not awaiting_player_move:
+            if not awaiting_player_move and not scene.alerts:
                 damage = turn_taker.get_action()
                 result = player.set_current_health(player.current_health - damage)
                 if result == "Game Over":

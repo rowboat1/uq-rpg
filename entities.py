@@ -14,7 +14,7 @@ class Enemy:
         return self.current_health / self.max_health
 
     def set_current_health(self, health):
-        self.current_health = health
+        self.current_health = max(0, health)
         if self.current_health <= 0:
             return "Battle over"
         return "Carry on"
