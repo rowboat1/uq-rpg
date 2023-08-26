@@ -83,7 +83,7 @@ if __name__ == "__main__":
                             player.set_location(target_location)
 
                             #check if collision is at end
-                            if new_loc = (GRID_W, GRID_H)
+                            if new_loc == (GRID_W, GRID_H):
 
                             # check for collision with enemy
                             collided_entity = check_collisions(new_loc)

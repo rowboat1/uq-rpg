@@ -7,10 +7,6 @@ from Enemy import Enemy
 from Tile import Tile
 from constants import *
 
-
-GRID_W = 19
-GRID_H = 8
-
 class Grid:
 
     def __init__(self):
