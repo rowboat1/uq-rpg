@@ -121,7 +121,7 @@ class Campaign(Scene):
         # don't allow monsters to spawn in the enterance or the exit
         valid_tiles_for_monster_objects = []
         for tile in self.tilegrid.values():
-            if (tile.x, tile.y) not in self.stair_dict.keys():
+            if tile not in self.stair_dict.keys():
                 valid_tiles_for_monster_objects.append(tile)
         
         tile_objects_where_monsters_will_appear = random.sample(valid_tiles_for_monster_objects, n_monsters)
