@@ -150,4 +150,63 @@ class Battle(Scene):
     
     def get_action(self):
         turn_taker = self.get_whose_turn()
+
+    def draw(self, main_s, screen_size, player, battle_background):
+        ENEMY_SPOT = (screen_size[0] * 0.65, screen_size[1] * 0.1)
+        PLAYER_SPOT = (screen_size[0] * 0.1, screen_size[1] * 0.5)
+        enemy = self.entities[0]
+
+        main_s.blit(battle_background, (0,0))
+        main_s.blit(pygame.transform.scale(
+            self.entities[0].image, 
+            (screen_size[0] * 0.25, screen_size[1] * 0.25)
+        ), (ENEMY_SPOT))
+        main_s.blit(pygame.transform.scale(
+            player.battle_image,
+            (screen_size[0] * 0.25, screen_size[1] * 0.5)
+        ), (PLAYER_SPOT))
+        enemy_health_rect = pygame.Rect(
+            screen_size[0] * 0.65, 
+            screen_size[1] * 0.40, 
+            screen_size[0] * 0.3, 
+            screen_size[1] * 0.05
+        ) 
+        enemy_current_health_rect = pygame.Rect(
+            screen_size[0] * 0.65, 
+            screen_size[1] * 0.40, 
+            screen_size[0] * 0.3 * enemy.get_health_ratio(), 
+            screen_size[1] * 0.05
+        ) 
+        player_health_rect = pygame.Rect(
+            screen_size[0] * 0.05, 
+            screen_size[1] * 0.5, 
+            screen_size[0] * 0.3,
+            screen_size[1] * 0.05
+        )
+        player_current_health_rect = pygame.Rect(
+            screen_size[0] * 0.05, 
+            screen_size[1] * 0.5,
+            screen_size[0] * 0.3 * player.get_health_ratio(),
+            screen_size[1] * 0.05
+        )
+        pygame.draw.rect(main_s, "black", enemy_health_rect)
+        pygame.draw.rect(main_s, "black", player_health_rect)
+        pygame.draw.rect(main_s, "red", enemy_current_health_rect)
+        pygame.draw.rect(main_s, "red", player_current_health_rect)
+        for x in range(player.get_rage_counter()):
+            pygame.draw.circle(main_s, "red", (
+                player_current_health_rect.left + (x * 50), 
+                player_current_health_rect.top - 50), 20)
+        enemy_health_text = font.render(f"{enemy.current_health}/{enemy.max_health}", True, "white")
+        player_health_text = font.render(f"{player.current_health}/{player.max_health}", True, "white")
+        main_s.blit(
+            enemy_health_text, (enemy_health_rect.left + 10, enemy_health_rect.top + 5)
+        )
+        main_s.blit(
+            player_health_text, (player_health_rect.left + 10, player_health_rect.top + 5)
+        )
         
+class Ded(Scene):
+    def __init__(self):
+        self.type = "ded"
+        self.entities = []

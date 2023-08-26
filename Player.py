@@ -11,6 +11,9 @@ class Player:
         self.max_health = 60
         self.current_health = 60
 
+    def get_rage_counter(self):
+        return 0
+
     def get_action(self):
         pass
 
@@ -23,7 +26,7 @@ class Player:
 
     def set_current_health(self, health):
         self.current_health = min(self.max_health, health)
-        if self.current_health == 0:
+        if self.current_health <= 0:
             return "Game Over"
         return "Carry on"
 
@@ -56,6 +59,9 @@ class Fighter(Player):
         super().__init__(size, battle_image, tunnel_image)
         self.battle_actions = ["rage", "punch", "heal"]
         self.rage_counter = 1
+
+    def get_rage_counter(self):
+        return self.rage_counter
 
     def rage(self):
         self.rage_counter += 1
