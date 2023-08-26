@@ -11,8 +11,6 @@ JORDAN DOING:
 creating feedback animation for heals and damage
 
 ROWAN DOING:
-player should gain experience
-incorporate level into attacks
 menu for battles
 
 DONE:
@@ -21,3 +19,5 @@ end game on player death
 load new level on staircase
 figure out good health increase mechanics
 wait till after attack animation for enemy to attack
+player should gain experience
+incorporate level into attacks
