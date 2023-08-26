@@ -2,7 +2,7 @@ from typing import Dict
 import pygame
 from Enemy import Enemy
 from Player import Bard, Fighter, Player, Sorceror
-from Scene import Scene
+from Scene import Scene, Campaign
 from Tile import Tile
 import itertools
 import random
@@ -23,11 +23,7 @@ PLAYER_TUNNEL_IMAGE = f"assets/player_images/student_tunnel{player_type}.png"
 PLAYER_SPOT = (SCREEN_SIZE[0] * 0.1, SCREEN_SIZE[1] * 0.5)
 PlayerClass = [Fighter, Bard, Sorceror][player_type - 1]
 print(PlayerClass)
-tilegrid = {
-    (x, y): Tile(x, y, random.choice(["purple", "grey"]), TILESIZE) 
-        for x,y in itertools.product(range(19), range(9))
-        if (x+1) % 2 or (y+1) % 2
-}
+
 player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
 class Grid:
@@ -146,7 +142,7 @@ monster_dict: Dict[Tile, Enemy] = dict(zip(
 )
 
 scene_stack = []
-scene = Scene("tunnels", monster_dict)
+scene = Campaign("tunnels", monster_dict, tilegrid)
 
 def check_collisions(new_loc):
     return monster_dict.get(new_loc, None)
@@ -185,7 +181,7 @@ if __name__ == "__main__":
                         # move right
                         target_location = (player.location[0] + 1, player.location[1])
                     if target_location:
-                        new_loc = tilegrid.get(target_location, None)
+                        new_loc = scene.tilegrid.get(target_location, None)
                         if new_loc:
                             player.set_location(target_location)
                             collided_entity = check_collisions(new_loc)
@@ -200,9 +196,9 @@ if __name__ == "__main__":
         if scene.type == "tunnels":
             main_s.fill("black")
             mp = pygame.mouse.get_pos()
-            for tile in tilegrid.values():
+            for tile in scene.tilegrid.values():
                 pygame.draw.rect(main_s, tile.color, tile.rect)
-            main_s.blit(pygame.transform.scale(player.tunnel_image, (TILESIZE, TILESIZE)), tilegrid[player.location].rect.topleft)
+            main_s.blit(pygame.transform.scale(player.tunnel_image, (TILESIZE, TILESIZE)), scene.tilegrid[player.location].rect.topleft)
             for tile, monster in monster_dict.items():
                 main_s.blit(pygame.transform.scale(monster.image, 
                     (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
