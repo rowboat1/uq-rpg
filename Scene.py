@@ -159,8 +159,6 @@ class Battle(Scene):
         self.turn_pointer = 1
         self.alerts = []
 
-
-
     def damage_enemy(self, damage):
         enemy = self.entities[0]
         self.alerts.append(Alert(str(damage), "red", 150, self.ENEMY_SPOT))
@@ -240,9 +238,6 @@ class Battle(Scene):
             alert.update()
             alert.draw(main_s)
         self.alerts = list(filter(lambda alert: not alert.should_be_dead(), self.alerts))
-
-
-
         
 class Ded(Scene):
     def __init__(self):
