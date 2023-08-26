@@ -1,4 +1,4 @@
-from pygame import font
+from constants import font
 
 class Alert:
     def __init__(self, message, colour, expiry, location):

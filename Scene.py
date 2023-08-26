@@ -163,7 +163,7 @@ class Battle(Scene):
 
     def damage_enemy(self, damage):
         enemy = self.entities[0]
-        self.alerts.append(Alert(damage, "red", 150, self.ENEMY_SPOT))
+        self.alerts.append(Alert(str(damage), "red", 150, self.ENEMY_SPOT))
         return enemy.set_current_health(enemy.current_health - damage)
 
     def get_whose_turn(self):
@@ -239,8 +239,7 @@ class Battle(Scene):
         for i, alert in enumerate(self.alerts):
             alert.update()
             alert.draw(main_s)
-            if (alert.should_be_dead()):
-                self.alerts.splice(i, 1)
+        self.alerts = list(filter(lambda alert: not alert.should_be_dead(), self.alerts))
 
 
 
