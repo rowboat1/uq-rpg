@@ -121,6 +121,9 @@ if __name__ == "__main__":
                             damage = max(0, result["damage"])
                             damage_result = scene.damage_enemy(damage)
                             if damage_result == "Battle over":
+                                player.set_current_health(
+                                    player.current_health + 3
+                                )
                                 pop_scene(new_dead = scene.entities)
                                 continue
                         if not awaiting_player_move:
