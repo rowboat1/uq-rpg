@@ -7,7 +7,7 @@ class Enemy:
         self.damage = damage
         self.image = image
 
-    def get_attack(self):
+    def get_action(self):
         return random.randrange(self.damage - 1, self.damage + 2)
 
     def get_health_ratio(self):
@@ -15,7 +15,7 @@ class Enemy:
 
     def set_current_health(self, health):
         self.current_health = health
-        if self.current_health == 0:
+        if self.current_health <= 0:
             return "Battle over"
         return "Carry on"
 

@@ -2,7 +2,7 @@ from typing import Dict
 import pygame
 from Enemy import Enemy
 from Player import Bard, Fighter, Player, Sorceror
-from Scene import Scene, Campaign
+from Scene import Scene, Campaign, Battle
 from Tile import Tile
 import itertools
 import random
@@ -22,7 +22,7 @@ PLAYER_BATTLE_IMAGE = f"assets/player_images/student{player_type}.png"
 PLAYER_TUNNEL_IMAGE = f"assets/player_images/student_tunnel{player_type}.png"
 PLAYER_SPOT = (SCREEN_SIZE[0] * 0.1, SCREEN_SIZE[1] * 0.5)
 PlayerClass = [Fighter, Bard, Sorceror][player_type - 1]
-print(PlayerClass)
+
 
 player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
@@ -123,18 +123,14 @@ class Grid:
 tilegrid = Grid().export()
 
 
-N_MONSTERS = 0
-
-player = Player(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
+N_MONSTERS = 10
+MONSTER_IMAGES = list(map(lambda x: 
+            pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
 
 tile_objects_where_monsters_will_appear = random.sample(list(
     filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), N_MONSTERS)
-monster_images = list(map(lambda x: 
-            pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
 # Gives us a dictionary of tile: monster pairs, equally distributing our 
 # limited list of monster images
-
-
 monster_dict: Dict[Tile, Enemy] = dict(zip(
     tile_objects_where_monsters_will_appear, 
     map(lambda image: Enemy(
@@ -142,7 +138,7 @@ monster_dict: Dict[Tile, Enemy] = dict(zip(
         random.randrange(6, 15), 
         image
     )
-    , itertools.cycle(monster_images)))
+    , itertools.cycle(MONSTER_IMAGES)))
 )
 
 scene_stack = []
@@ -154,11 +150,15 @@ def check_collisions(new_loc):
 def set_scene(type, entities):
     global scene
     scene_stack.append((scene, monster_dict))
-    scene = Scene(type, entities)
+    if type == "battle":
+        scene = Battle(type, entities, player)
+    if type == "tunnels":
+        scene = Scene(type, entities)
 
 def pop_scene():
     global scene
-    scene = scene_stack.pop()
+    global monster_dict
+    scene, monster_dict = scene_stack.pop()
 
 if __name__ == "__main__":
     while 1:
@@ -202,7 +202,26 @@ if __name__ == "__main__":
                                 )
 
                 elif scene.type == "battle":
-                    pass
+                    if awaiting_player_move:
+                        result = None
+                        if event.key == pygame.K_1:
+                            awaiting_player_move = False
+                            result = player.take_action(0)
+                        if event.key == pygame.K_2:
+                            awaiting_player_move = False
+                            result = player.take_action(1)
+                        if event.key == pygame.K_3:
+                            awaiting_player_move = False
+                            result = player.take_action(2)
+                        if result:
+                            damage = max(0, result["damage"])
+                            damage_result = scene.damage_enemy(damage)
+                            if damage_result == "Battle over":
+                                pop_scene()
+                                continue
+                        if not awaiting_player_move:
+                            scene.advance_turn()
+                    
         if scene.type == "tunnels":
             main_s.fill("black")
             mp = pygame.mouse.get_pos()
@@ -214,7 +233,13 @@ if __name__ == "__main__":
                     (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
                     tile.rect.topleft)
         elif scene.type == "battle":
-            enemy  = scene.entities[0]
+            enemy = scene.entities[0]
+            turn_taker = scene.get_whose_turn()
+            awaiting_player_move = turn_taker == player
+            if not awaiting_player_move:
+                damage = turn_taker.get_action()
+                player.set_current_health(player.current_health - damage)
+                scene.advance_turn()
             main_s.blit(BATTLE_BACKGROUND, (0,0))
             main_s.blit(pygame.transform.scale(
                 scene.entities[0].image, 
