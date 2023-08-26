@@ -143,6 +143,9 @@ if __name__ == "__main__":
                 main_s.blit(pygame.transform.scale(monster.image, 
                     (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
                     tile.rect.topleft)
+            for i, status in enumerate(player.get_statuses()):
+                status_text = font.render(status, True, "white")
+                main_s.blit(status_text, (50, (GRID_H + 1) * TILESIZE + i * 50))
         elif scene.type == "battle":
             enemy = scene.entities[0]
             turn_taker = scene.get_whose_turn()

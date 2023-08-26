@@ -53,6 +53,13 @@ class Player:
     def set_location(self, location):
         self.location = location
 
+    def get_statuses(self):
+        return [
+            f"Health: {self.current_health} / {self.max_health}",
+            f"XP: {self.current_experience} / {self.experience_threshold}",
+            f"Level: {self.level}"
+        ]
+
 class Sorceror(Player):
     def __init__(self, size, battle_image, tunnel_image):
         super().__init__(size, battle_image, tunnel_image)
@@ -94,6 +101,9 @@ class Fighter(Player):
         return {
             "damage": damage_dealt
         }
+    
+    def get_statuses(self):
+        return super().get_statuses() + [f"Rage: {self.rage_counter}"]
 
     def heal(self):
         self.set_current_health(self.current_health + 2)

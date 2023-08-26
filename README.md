@@ -12,8 +12,6 @@ JORDAN DOING:
 creating feedback animation for heals and damage
 
 ROWAN DOING:
-include player level on main screen 
-include player health on main screen
 
 DONE:
 show rage counter
@@ -25,3 +23,5 @@ player should gain experience
 incorporate level into attacks
 menu for battles
 wait till after enemy has attacked to end game
+include player level on main screen 
+include player health on main screen
