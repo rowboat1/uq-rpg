@@ -55,16 +55,16 @@ class Fighter(Player):
     def __init__(self, size, battle_image, tunnel_image):
         super().__init__(size, battle_image, tunnel_image)
         self.battle_actions = ["rage", "punch", "heal"]
-        self.rage_counter = 0
+        self.rage_counter = 1
 
     def rage(self):
         self.rage_counter += 1
 
     def punch(self):
         damage_bonus = self.rage_counter ** 2 + (10 if self.current_health < 10 else 0)
-        self.rage_counter = 0
+        self.rage_counter = 1
         return {
-            "damage": random.randrange(1, 4) + damage_bonus
+            "damage": random.randrange(2, 6) + damage_bonus
         }
 
     def heal(self):

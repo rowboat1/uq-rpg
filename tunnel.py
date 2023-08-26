@@ -4,7 +4,6 @@ from Enemy import Enemy
 from Player import Bard, Fighter, Player, Sorceror
 from Scene import Scene, Campaign, Battle
 from Tile import Tile
-import itertools
 import random
 from sys import argv
 from constants import *
@@ -49,9 +48,11 @@ def set_scene(type, entities):
     if type == "tunnels":
         scene = Campaign(N_MONSTERS, MONSTER_IMAGES)
 
-def pop_scene():
+def pop_scene(new_dead = None):
     global scene
     scene = scene_stack.pop()
+    if new_dead:
+        scene.kill(new_dead)
 
 if __name__ == "__main__":
     while 1:
@@ -113,7 +114,7 @@ if __name__ == "__main__":
                             damage = max(0, result["damage"])
                             damage_result = scene.damage_enemy(damage)
                             if damage_result == "Battle over":
-                                pop_scene()
+                                pop_scene(new_dead = scene.entities)
                                 continue
                         if not awaiting_player_move:
                             scene.advance_turn()
