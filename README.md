@@ -10,11 +10,12 @@ figure out bard mechanics
 caster mechanics
 
 JORDAN DOING:
-creating feedback animation for heals and damage
+
 
 ROWAN DOING:
 
 DONE:
+feedback animation for heals and damage
 show rage counter
 end game on player death
 load new level on staircase
