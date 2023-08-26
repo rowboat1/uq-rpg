@@ -1,7 +1,8 @@
 TODO:
 add treasures
 add a shield
-wait till after enemy has attacked to end game
+add overworld
+add nephilim
 
 UNREALISTIC FOR HACKATHON:
 figure out bard mechanics
@@ -11,6 +12,8 @@ JORDAN DOING:
 creating feedback animation for heals and damage
 
 ROWAN DOING:
+include player level on main screen 
+include player health on main screen
 
 DONE:
 show rage counter
@@ -21,3 +24,4 @@ wait till after attack animation for enemy to attack
 player should gain experience
 incorporate level into attacks
 menu for battles
+wait till after enemy has attacked to end game

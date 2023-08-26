@@ -91,7 +91,6 @@ class Fighter(Player):
         damage_bonus = self.rage_counter ** 2 + (10 if self.current_health < 10 else 0)
         self.rage_counter = self.level
         damage_dealt = random.randrange(2, 6) + damage_bonus
-        print(f"Damage: {damage_dealt}")
         return {
             "damage": damage_dealt
         }

@@ -223,7 +223,6 @@ class Battle(Scene):
             except IndexError:
                 action_text = f"{x + 1}.               "
             action_text = font.render(action_text, True, "black")
-            print(x, x%2, x//2, (screen_size[0] * 0.25 * x%2), (screen_size[1] * 0.25 * x//2 ))
             button_rect.topleft = (
                 screen_size[0] * 0.5 + (screen_size[0] * 0.25 * (x%2)),
                 screen_size[1] * 0.5 + (screen_size[1] * 0.25 * (x//2) )
