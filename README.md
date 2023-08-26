@@ -3,6 +3,7 @@ add treasures
 add a shield
 add nephilim
 add overworld
+make game not crash
 
 UNREALISTIC FOR HACKATHON:
 figure out bard mechanics

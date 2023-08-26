@@ -100,10 +100,13 @@ if __name__ == "__main__":
                             collided_entity = check_collisions(new_loc)
                             if collided_entity:
                                 collision_event = collided_entity.on_collision()
-                                set_scene(
-                                    collision_event["type"], 
-                                    collision_event["entities"]
-                                )
+                                if collision_event["type"] == "heal":
+                                    player.set_current_health(player.current_health + 5)
+                                else:
+                                    set_scene(
+                                        collision_event["type"], 
+                                        collision_event["entities"]
+                                    )
 
                 elif scene.type == "battle":
                     if awaiting_player_move:
@@ -141,6 +144,8 @@ if __name__ == "__main__":
                 main_s.blit(pygame.transform.scale(monster.image, 
                     (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
                     tile.rect.topleft)
+            for tile, potion in scene.potion_dict.items():
+                main_s.blit(pygame.transform.scale(potion.image, (TILESIZE, TILESIZE)), tile.rect.topleft)
             for i, status in enumerate(player.get_statuses()):
                 status_text = font.render(status, True, "white")
                 main_s.blit(status_text, (50, (GRID_H + 1) * TILESIZE + i * 50))
