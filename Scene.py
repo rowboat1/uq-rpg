@@ -113,10 +113,12 @@ class Campaign(Scene):
         # tilegrid is a map of (x,y) tuples to tile objects
         self.tilegrid = Grid().export()
 
+        self.stair_dict = {(0, 0): Stair('up'), (GRID_W, GRID_H): Stair('down')}
+
         # don't allow monsters to spawn in the enterance or the exit
         valid_tiles_for_monster_objects = []
         for tile in self.tilegrid.values():
-            if (tile.x, tile.y) not in [(0, 0), (GRID_W, GRID_H)]:
+            if (tile.x, tile.y) not in self.stair_dict.keys():
                 valid_tiles_for_monster_objects.append(tile)
         
         tile_objects_where_monsters_will_appear = random.sample(valid_tiles_for_monster_objects, n_monsters)
@@ -130,9 +132,16 @@ class Campaign(Scene):
 
     
     def check_colliders(self, new_loc):
+
+        # sorry, this is a terrible way to do this and I apologize for my sins
+
         monster = self.monster_dict.get(new_loc, None)
         if (monster):
             return monster
+        stair = self.stair_dict.get(new_loc, None)
+        if (stair):
+            return stair
+        
         
 
 

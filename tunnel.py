@@ -1,8 +1,8 @@
 from typing import Dict
 import pygame
-from Enemy import Enemy
+from entities import Enemy
 from Player import Bard, Fighter, Player, Sorceror
-from Scene import Ded, Scene, Campaign, Battle
+from Scene import Scene, Campaign, Battle
 from Tile import Tile
 import random
 from sys import argv
@@ -18,7 +18,11 @@ PLAYER_TUNNEL_IMAGE = f"assets/player_images/student_tunnel{class_selection}.png
 main_s = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 SCREEN_SIZE = (main_s.get_size())
 BATTLE_BACKGROUND = pygame.transform.scale(BATTLE_BACKGROUND, SCREEN_SIZE)
+ENEMY_SPOT = (SCREEN_SIZE[0] * 0.65, SCREEN_SIZE[1] * 0.1)
 
+PLAYER_SPOT = (SCREEN_SIZE[0] * 0.1, SCREEN_SIZE[1] * 0.5)
+pygame.font.init()
+font = pygame.font.Font(None, 60)
 PlayerClass = [Fighter, Bard, Sorceror][class_selection - 1]
 
 
@@ -36,15 +40,13 @@ scene = Campaign(N_MONSTERS, MONSTER_IMAGES)
 def check_collisions(new_loc):
     return scene.check_colliders(new_loc)
 
-def set_scene(type, entities=None):
+def set_scene(type, entities):
     global scene
     scene_stack.append(scene)
     if type == "battle":
         scene = Battle(type, entities, player)
     if type == "tunnels":
         scene = Campaign(N_MONSTERS, MONSTER_IMAGES)
-    if type == "ded":
-        scene = Ded()
 
 def pop_scene(new_dead = None):
     global scene
@@ -83,6 +85,7 @@ if __name__ == "__main__":
 
                             print (new_loc)
                             print (scene.tilegrid[(GRID_W, GRID_H)])
+                            
                             #check if collision is at end
                             if new_loc == scene.tilegrid[(GRID_W, GRID_H)]:
                                 set_scene("tunnel", None)
@@ -133,15 +136,51 @@ if __name__ == "__main__":
             awaiting_player_move = turn_taker == player
             if not awaiting_player_move:
                 damage = turn_taker.get_action()
-                result = player.set_current_health(player.current_health - damage)
-                print(result)
-                if result == "Game Over":
-                    set_scene("ded")
-                    continue
+                player.set_current_health(player.current_health - damage)
                 scene.advance_turn()
-            scene.draw(main_s, SCREEN_SIZE, player, BATTLE_BACKGROUND)
-        elif scene.type == "ded":
-            main_s.fill("black")
-            game_over_text = font.render("Game Over!", True, "white")
-            main_s.blit(game_over_text, (100, 100))
+            main_s.blit(BATTLE_BACKGROUND, (0,0))
+            main_s.blit(pygame.transform.scale(
+                scene.entities[0].image, 
+                (SCREEN_SIZE[0] * 0.25, SCREEN_SIZE[1] * 0.25)
+            ), (ENEMY_SPOT))
+            main_s.blit(pygame.transform.scale(
+                player.battle_image,
+                (SCREEN_SIZE[0] * 0.25, SCREEN_SIZE[1] * 0.5)
+            ), (PLAYER_SPOT))
+            enemy_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.65, 
+                SCREEN_SIZE[1] * 0.40, 
+                SCREEN_SIZE[0] * 0.3, 
+                SCREEN_SIZE[1] * 0.05
+            ) 
+            enemy_current_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.65, 
+                SCREEN_SIZE[1] * 0.40, 
+                SCREEN_SIZE[0] * 0.3 * enemy.get_health_ratio(), 
+                SCREEN_SIZE[1] * 0.05
+            ) 
+            player_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.05, 
+                SCREEN_SIZE[1] * 0.5, 
+                SCREEN_SIZE[0] * 0.3,
+                SCREEN_SIZE[1] * 0.05
+            )
+            player_current_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.05, 
+                SCREEN_SIZE[1] * 0.5,
+                SCREEN_SIZE[0] * 0.3 * player.get_health_ratio(),
+                SCREEN_SIZE[1] * 0.05
+            )
+            pygame.draw.rect(main_s, "black", enemy_health_rect)
+            pygame.draw.rect(main_s, "black", player_health_rect)
+            pygame.draw.rect(main_s, "red", enemy_current_health_rect)
+            pygame.draw.rect(main_s, "red", player_current_health_rect)
+            enemy_health_text = font.render(f"{enemy.current_health}/{enemy.max_health}", True, "white")
+            player_health_text = font.render(f"{player.current_health}/{player.max_health}", True, "white")
+            main_s.blit(
+                enemy_health_text, (enemy_health_rect.left + 10, enemy_health_rect.top + 5)
+            )
+            main_s.blit(
+                player_health_text, (player_health_rect.left + 10, player_health_rect.top + 5)
+            )
         pygame.display.flip()
