@@ -1,7 +1,11 @@
 TODO:
 add treasures
-figure out bard mechanics
 menu for battles
+add a shield
+
+UNREALISTIC FOR HACKATHON:
+figure out bard mechanics
+caster mechanics
 
 JORDAN DOING:
 
