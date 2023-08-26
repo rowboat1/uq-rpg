@@ -24,3 +24,45 @@ class Player:
 
     def set_location(self, location):
         self.location = location
+
+class Sorceror(Player):
+    def __init__(self, size, battle_image, tunnel_image):
+        super().__init__(size, battle_image, tunnel_image)
+        self.battle_actions = ["cast", "punch", "heal"]
+
+    def cast(self):
+        pass
+
+    def punch(self):
+        pass
+
+    def heal(self):
+        pass
+
+class Fighter(Player):
+    def __init__(self, size, battle_image, tunnel_image):
+        super().__init__(size, battle_image, tunnel_image)
+        self.battle_actions = ["cast", "punch", "heal"]
+
+    def cast(self):
+        pass
+
+    def punch(self):
+        pass
+
+    def heal(self):
+        pass
+
+class Bard(Player):
+    def __init__(self, size, battle_image, tunnel_image):
+        super().__init__(size, battle_image, tunnel_image)
+        self.battle_actions = ["cast", "punch", "heal"]
+
+    def cast(self):
+        pass
+
+    def punch(self):
+        pass
+
+    def heal(self):
+        pass
