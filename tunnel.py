@@ -9,7 +9,7 @@ import random
 
 main_s = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 pygame.font.init()
-font = pygame.font.Font(None, 30)
+font = pygame.font.Font(None, 60)
 TILESIZE = 80
 ORIGINAL_SIZE = (960, 736)
 BATTLE_BACKGROUND = pygame.image.load("tunnels_background.jpg")
@@ -108,6 +108,7 @@ if __name__ == "__main__":
                     (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
                     tile.rect.topleft)
         elif scene.type == "battle":
+            enemy  = scene.entities[0]
             main_s.blit(BATTLE_BACKGROUND, (0,0))
             main_s.blit(pygame.transform.scale(
                 scene.entities[0].image, 
@@ -117,4 +118,40 @@ if __name__ == "__main__":
                 player.battle_image,
                 (SCREEN_SIZE[0] * 0.25, SCREEN_SIZE[1] * 0.5)
             ), (PLAYER_SPOT))
+            enemy_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.65, 
+                SCREEN_SIZE[1] * 0.40, 
+                SCREEN_SIZE[0] * 0.3, 
+                SCREEN_SIZE[1] * 0.05
+            ) 
+            enemy_current_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.65, 
+                SCREEN_SIZE[1] * 0.40, 
+                SCREEN_SIZE[0] * 0.3 * enemy.get_health_ratio(), 
+                SCREEN_SIZE[1] * 0.05
+            ) 
+            player_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.05, 
+                SCREEN_SIZE[1] * 0.5, 
+                SCREEN_SIZE[0] * 0.3,
+                SCREEN_SIZE[1] * 0.05
+            )
+            player_current_health_rect = pygame.Rect(
+                SCREEN_SIZE[0] * 0.05, 
+                SCREEN_SIZE[1] * 0.5,
+                SCREEN_SIZE[0] * 0.3 * player.get_health_ratio(),
+                SCREEN_SIZE[1] * 0.05
+            )
+            pygame.draw.rect(main_s, "black", enemy_health_rect)
+            pygame.draw.rect(main_s, "black", player_health_rect)
+            pygame.draw.rect(main_s, "red", enemy_current_health_rect)
+            pygame.draw.rect(main_s, "red", player_current_health_rect)
+            enemy_health_text = font.render(f"{enemy.current_health}/{enemy.max_health}", True, "white")
+            player_health_text = font.render(f"{player.current_health}/{player.max_health}", True, "white")
+            main_s.blit(
+                enemy_health_text, (enemy_health_rect.left + 10, enemy_health_rect.top + 5)
+            )
+            main_s.blit(
+                player_health_text, (player_health_rect.left + 10, player_health_rect.top + 5)
+            )
         pygame.display.flip()
