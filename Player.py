@@ -61,7 +61,7 @@ class Fighter(Player):
         self.rage_counter += 1
 
     def punch(self):
-        damage_bonus = self.rage_counter ** 2 + 10 if self.current_health < 10 else 0
+        damage_bonus = self.rage_counter ** 2 + (10 if self.current_health < 10 else 0)
         self.rage_counter = 0
         return {
             "damage": random.randrange(1, 4) + damage_bonus

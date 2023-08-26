@@ -84,6 +84,7 @@ if __name__ == "__main__":
 
                             #check if collision is at end
                             if new_loc == (GRID_W, GRID_H):
+                                pass
 
                             # check for collision with enemy
                             collided_entity = check_collisions(new_loc)
