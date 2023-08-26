@@ -69,14 +69,12 @@ class Grid:
     def path(self, start, finish):
 
         if start[0]<finish[0]:
-            print('d')
             i=1
             while(start[0]+i!=finish[0]+1):
                 self.dict[start[0]+i, start[1]] = Tile(start[0]+i, start[1], "blue", TILESIZE)
                 i += 1
 
         if start[0]>finish[0]:
-            print('?')
             i=1
             while(start[0]-i!=finish[0]-1):
                 self.dict[start[0]-i, start[1]] = Tile(start[0]-i, start[1], "blue", TILESIZE)
@@ -84,7 +82,6 @@ class Grid:
 
 
         if start[1]<finish[1]:
-            print('q')
             i=1
             while(start[1]+i!=finish[1]+1):
                 self.dict[finish[0], finish[1]-i] = Tile(finish[0], finish[1]-i, "white", TILESIZE)
@@ -92,7 +89,6 @@ class Grid:
 
         
         if start[1]>finish[1]:
-            print('ah')
             i=1
             while(start[1]-i!=finish[1]-1):
                 self.dict[finish[0], finish[1]+i] = Tile(finish[0], finish[1]+i, "white", TILESIZE)
@@ -115,11 +111,12 @@ class Grid:
 tilegrid = Grid().export()
 
 
+N_MONSTERS = 0
 
 player = Player(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
 tile_objects_where_monsters_will_appear = random.sample(list(
-    filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), 10)
+    filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), N_MONSTERS)
 monster_images = list(map(lambda x: 
             pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
 # Gives us a dictionary of tile: monster pairs, equally distributing our 
