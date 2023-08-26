@@ -29,7 +29,7 @@ PlayerClass = [Fighter, Bard, Sorceror][class_selection - 1]
 
 player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
-N_MONSTERS = 10
+N_MONSTERS = 0
 MONSTER_IMAGES = list(map(lambda x: 
             pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
 
@@ -39,7 +39,7 @@ scene_stack = []
 scene = Campaign(N_MONSTERS, MONSTER_IMAGES)
 
 def check_collisions(new_loc):
-    return scene.monster_dict.get(new_loc, None)
+    return scene.check_colliders(new_loc)
 
 def set_scene(type, entities):
     global scene
@@ -82,9 +82,11 @@ if __name__ == "__main__":
                         if new_loc:
                             player.set_location(target_location)
 
+                            print (new_loc)
+                            print (scene.tilegrid[(GRID_W, GRID_H)])
                             #check if collision is at end
-                            if new_loc == (GRID_W, GRID_H):
-                                pass
+                            if new_loc == scene.tilegrid[(GRID_W, GRID_H)]:
+                                set_scene("tunnel", None)
 
                             # check for collision with enemy
                             collided_entity = check_collisions(new_loc)

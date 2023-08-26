@@ -109,19 +109,31 @@ class Campaign(Scene):
         self.type = "tunnels" 
         # tilegrid is a map of (x,y) tuples to tile objects
         self.tilegrid = Grid().export()
-        tile_objects_where_monsters_will_appear = random.sample(list(
-            filter(lambda tile: (tile.x, tile.y) != (0, 0), self.tilegrid.values())), n_monsters)
+
+        # don't allow monsters to spawn in the enterance or the exit
+        valid_tiles_for_monster_objects = []
+        for tile in self.tilegrid.values():
+            if (tile.x, tile.y) not in [(0, 0), (GRID_W, GRID_H)]:
+                valid_tiles_for_monster_objects.append(tile)
+        
+        tile_objects_where_monsters_will_appear = random.sample(valid_tiles_for_monster_objects, n_monsters)
+
         # Gives us a dictionary of tile: monster pairs, equally distributing our 
         # limited list of monster images
-        self.monster_dict = dict(zip(
-            tile_objects_where_monsters_will_appear, 
-            map(lambda image: Enemy(
-                random.randrange(6, 15), 
-                random.randrange(6, 15), 
-                image
-            )
-            , itertools.cycle(monster_images)))
-        )
+        self.monster_dict = {}
+        for i, tile in enumerate(tile_objects_where_monsters_will_appear):
+            new_monster = Enemy(random.randrange(6, 15), random.randrange(6, 15), monster_images[i % len(monster_images)])
+            self.monster_dict[tile] = new_monster
+
+    
+    def check_colliders(self, new_loc):
+        monster = self.monster_dict.get(new_loc, None)
+        if (monster):
+            return monster
+        
+
+
+
 
 class Battle(Scene):
     def __init__(self, type, entities, player):
