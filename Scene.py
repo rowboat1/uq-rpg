@@ -146,12 +146,20 @@ class Campaign(Scene):
     def check_colliders(self, new_loc):
         # sorry, this is a terrible way to do this and I apologize for my sins
 
+        print(new_loc)
+        print(self.potion_dict)
         monster = self.monster_dict.get(new_loc, None)
         if monster:
             return monster
         stair = self.stair_dict.get(new_loc, None)
         if stair:
             return stair
+        potion = self.potion_dict.get(new_loc, None)
+        if potion:
+            self.potion_dict = {
+                k:v for k,v in self.potion_dict.items() if v != potion
+            }
+            return potion
 
     def kill(self, new_dead):
         self.monster_dict = {

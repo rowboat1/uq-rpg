@@ -100,6 +100,7 @@ if __name__ == "__main__":
                             collided_entity = check_collisions(new_loc)
                             if collided_entity:
                                 collision_event = collided_entity.on_collision()
+                                print(collision_event)
                                 if collision_event["type"] == "heal":
                                     player.set_current_health(player.current_health + 5)
                                 else:
