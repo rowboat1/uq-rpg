@@ -1,3 +1,4 @@
+from typing import Dict
 import pygame
 from Enemy import Enemy
 from Player import Player
@@ -30,13 +31,15 @@ monster_images = list(map(pygame.image.load, [
 ]))
 # Gives us a dictionary of tile: monster pairs, equally distributing our 
 # limited list of monster images
-monster_dict = dict(zip(tile_objects_where_monsters_will_appear, map(
-    lambda image: Enemy(
+monster_dict: Dict[Tile: Enemy] = dict(zip(
+    tile_objects_where_monsters_will_appear, 
+    map(lambda image: Enemy(
         random.randrange(6, 15), 
         random.randrange(6, 15), 
         image
     )
-    , itertools.cycle(monster_images))))
+    , itertools.cycle(monster_images)))
+)
 
 scene_stack = []
 scene = Scene("tunnels", monster_dict)
