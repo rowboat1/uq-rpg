@@ -6,6 +6,7 @@ from Scene import Ded, Scene, Campaign, Battle
 from Tile import Tile
 import random
 from sys import argv
+from alert import Alert
 from constants import *
 
 if len(argv) > 1:
@@ -123,12 +124,9 @@ if __name__ == "__main__":
                             damage = max(0, result["damage"])
                             damage_result = scene.damage_enemy(damage)
                             if damage_result == "Battle over":
-                                player.set_current_health(
-                                    player.current_health + 5
-                                )
-                                player.set_current_experience(
-                                    player.current_experience + 2
-                                )
+                                player.set_current_health(player.current_health + 5)
+                                player.set_current_experience(player.current_experience + 2)
+                                scene.add_alert(Alert(str(damage), "green", 50, scene.PLAYER_CENTRE))
                                 while scene.alerts:
                                     scene.draw(main_s, SCREEN_SIZE, player, BATTLE_BACKGROUND)
                                 pop_scene(new_dead = scene.entities)
@@ -158,6 +156,7 @@ if __name__ == "__main__":
             if not awaiting_player_move and not scene.alerts:
                 damage = turn_taker.get_action()
                 result = player.set_current_health(player.current_health - damage)
+                scene.add_alert(Alert(str(damage), "red", 50, scene.PLAYER_CENTRE))
                 if result == "Game Over":
                     set_scene("ded")
                     continue
