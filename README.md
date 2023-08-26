@@ -1,6 +1,7 @@
 TODO:
 add treasures
 figure out bard mechanics
+menu for battles
 
 JORDAN DOING:
 figure out good health increase mechanics
