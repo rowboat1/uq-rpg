@@ -1,3 +1,4 @@
+import random
 import pygame
 
 class Player:
@@ -10,11 +11,17 @@ class Player:
         self.max_health = 60
         self.current_health = 60
 
+    def get_action(self):
+        pass
+
+    def take_action(self, x):
+        return getattr(self, self.battle_actions[x])()
+
     def get_health_ratio(self):
         return self.current_health / self.max_health
 
     def set_current_health(self, health):
-        self.current_health = health
+        self.current_health = min(self.max_health, health)
         if self.current_health == 0:
             return "Game Over"
         return "Carry on"
@@ -31,27 +38,36 @@ class Sorceror(Player):
         self.battle_actions = ["cast", "punch", "heal"]
 
     def cast(self):
-        pass
+        return {
+            "damage": random.randrange(5, 10)
+        }
 
     def punch(self):
-        pass
+        return {
+            "damage": random.randrange(1, 4)
+        }
 
     def heal(self):
-        pass
+        self.set_current_health(self.current_health + 5)
 
 class Fighter(Player):
     def __init__(self, size, battle_image, tunnel_image):
         super().__init__(size, battle_image, tunnel_image)
-        self.battle_actions = ["cast", "punch", "heal"]
+        self.battle_actions = ["rage", "punch", "heal"]
+        self.rage_counter = 0
 
-    def cast(self):
-        pass
+    def rage(self):
+        self.rage_counter += 1
 
     def punch(self):
-        pass
+        damage_bonus = self.rage_counter ** 2 + 10 if self.current_health < 10 else 0
+        self.rage_counter = 0
+        return {
+            "damage": random.randrange(1, 4) + damage_bonus
+        }
 
     def heal(self):
-        pass
+        self.set_current_health(self.current_health + 2)
 
 class Bard(Player):
     def __init__(self, size, battle_image, tunnel_image):

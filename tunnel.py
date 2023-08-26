@@ -2,7 +2,7 @@ from typing import Dict
 import pygame
 from Enemy import Enemy
 from Player import Bard, Fighter, Player, Sorceror
-from Scene import Scene
+from Scene import Battle, Scene
 from Tile import Tile
 import itertools
 import random
@@ -22,7 +22,6 @@ PLAYER_BATTLE_IMAGE = f"assets/player_images/student{player_type}.png"
 PLAYER_TUNNEL_IMAGE = f"assets/player_images/student_tunnel{player_type}.png"
 PLAYER_SPOT = (SCREEN_SIZE[0] * 0.1, SCREEN_SIZE[1] * 0.5)
 PlayerClass = [Fighter, Bard, Sorceror][player_type - 1]
-print(PlayerClass)
 tilegrid = {
     (x, y): Tile(x, y, random.choice(["purple", "grey"]), TILESIZE) 
         for x,y in itertools.product(range(19), range(9))
@@ -77,14 +76,12 @@ class Grid:
     def path(self, start, finish):
 
         if start[0]<finish[0]:
-            print('d')
             i=1
             while(start[0]+i!=finish[0]+1):
                 self.dict[start[0]+i, start[1]] = Tile(start[0]+i, start[1], "blue", TILESIZE)
                 i += 1
 
         if start[0]>finish[0]:
-            print('?')
             i=1
             while(start[0]-i!=finish[0]-1):
                 self.dict[start[0]-i, start[1]] = Tile(start[0]-i, start[1], "blue", TILESIZE)
@@ -92,7 +89,6 @@ class Grid:
 
 
         if start[1]<finish[1]:
-            print('q')
             i=1
             while(start[1]+i!=finish[1]+1):
                 self.dict[finish[0], finish[1]-i] = Tile(finish[0], finish[1]-i, "white", TILESIZE)
@@ -100,7 +96,6 @@ class Grid:
 
         
         if start[1]>finish[1]:
-            print('ah')
             i=1
             while(start[1]-i!=finish[1]-1):
                 self.dict[finish[0], finish[1]+i] = Tile(finish[0], finish[1]+i, "white", TILESIZE)
@@ -122,9 +117,6 @@ class Grid:
 # tilegrid is a map of (x,y) tuples to tile objects
 tilegrid = Grid().export()
 
-
-
-player = Player(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
 tile_objects_where_monsters_will_appear = random.sample(list(
     filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), 10)
@@ -153,11 +145,15 @@ def check_collisions(new_loc):
 def set_scene(type, entities):
     global scene
     scene_stack.append((scene, monster_dict))
-    scene = Scene(type, entities)
+    if type == "battle":
+        scene = Battle(type, entities, player)
+    if type == "tunnels":
+        scene = Scene(type, entities)
 
 def pop_scene():
     global scene
-    scene = scene_stack.pop()
+    global monster_dict
+    scene, monster_dict = scene_stack.pop()
 
 if __name__ == "__main__":
     while 1:
@@ -195,7 +191,26 @@ if __name__ == "__main__":
                                     collision_event["entities"]
                                 )
                 elif scene.type == "battle":
-                    pass
+                    if awaiting_player_move:
+                        result = None
+                        if event.key == pygame.K_1:
+                            awaiting_player_move = False
+                            result = player.take_action(0)
+                        if event.key == pygame.K_2:
+                            awaiting_player_move = False
+                            result = player.take_action(1)
+                        if event.key == pygame.K_3:
+                            awaiting_player_move = False
+                            result = player.take_action(2)
+                        if result:
+                            damage = max(0, result["damage"])
+                            damage_result = scene.damage_enemy(damage)
+                            if damage_result == "Battle over":
+                                pop_scene()
+                                continue
+                        if not awaiting_player_move:
+                            scene.advance_turn()
+                    
         if scene.type == "tunnels":
             main_s.fill("black")
             mp = pygame.mouse.get_pos()
@@ -207,7 +222,13 @@ if __name__ == "__main__":
                     (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
                     tile.rect.topleft)
         elif scene.type == "battle":
-            enemy  = scene.entities[0]
+            enemy = scene.entities[0]
+            turn_taker = scene.get_whose_turn()
+            awaiting_player_move = turn_taker == player
+            if not awaiting_player_move:
+                damage = turn_taker.get_action()
+                player.set_current_health(player.current_health - damage)
+                scene.advance_turn()
             main_s.blit(BATTLE_BACKGROUND, (0,0))
             main_s.blit(pygame.transform.scale(
                 scene.entities[0].image, 
