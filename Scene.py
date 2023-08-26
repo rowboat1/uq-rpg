@@ -156,9 +156,12 @@ class Battle(Scene):
         self.turn_pointer = 1
         self.alerts = []
 
+    def add_alert(self, alert):
+        self.alerts.append(alert)
+
     def damage_enemy(self, damage):
         enemy = self.entities[0]
-        self.alerts.append(Alert(str(damage), "red", 50, self.ENEMY_SPOT))
+        self.add_alert(Alert(str(damage), "red", 50, self.ENEMY_CENTRE))
         return enemy.set_current_health(enemy.current_health - damage)
 
     def get_whose_turn(self):
@@ -177,6 +180,10 @@ class Battle(Scene):
 
         self.ENEMY_SPOT = (screen_size[0] * 0.65, screen_size[1] * 0.1)
         self.PLAYER_SPOT = (screen_size[0] * 0.1, screen_size[1] * 0.5)
+
+        self.ENEMY_CENTRE = (screen_size[0] * 0.65, screen_size[1] * 0.1)
+        self.PLAYER_CENTRE = (screen_size[0] * 0.15, screen_size[1] * 0.6)
+
 
         main_s.blit(battle_background, (0,0))
         main_s.blit(pygame.transform.scale(
