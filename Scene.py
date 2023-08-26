@@ -6,6 +6,7 @@ import pygame
 from entities import DownStair, Enemy, UpStair
 from Tile import Tile
 from constants import *
+from alert import Alert
 
 class Grid:
 
@@ -156,9 +157,13 @@ class Battle(Scene):
         super().__init__(type, entities)
         self.turn_tracker = entities + [player]
         self.turn_pointer = 1
+        self.alerts = []
+
+
 
     def damage_enemy(self, damage):
         enemy = self.entities[0]
+        self.alerts.append(Alert(damage, "red", 150, self.ENEMY_SPOT))
         return enemy.set_current_health(enemy.current_health - damage)
 
     def get_whose_turn(self):
@@ -172,19 +177,21 @@ class Battle(Scene):
         turn_taker = self.get_whose_turn()
 
     def draw(self, main_s, screen_size, player, battle_background):
-        ENEMY_SPOT = (screen_size[0] * 0.65, screen_size[1] * 0.1)
-        PLAYER_SPOT = (screen_size[0] * 0.1, screen_size[1] * 0.5)
+        
         enemy = self.entities[0]
+
+        self.ENEMY_SPOT = (screen_size[0] * 0.65, screen_size[1] * 0.1)
+        self.PLAYER_SPOT = (screen_size[0] * 0.1, screen_size[1] * 0.5)
 
         main_s.blit(battle_background, (0,0))
         main_s.blit(pygame.transform.scale(
             self.entities[0].image, 
             (screen_size[0] * 0.25, screen_size[1] * 0.25)
-        ), (ENEMY_SPOT))
+        ), (self.ENEMY_SPOT))
         main_s.blit(pygame.transform.scale(
             player.battle_image,
             (screen_size[0] * 0.25, screen_size[1] * 0.5)
-        ), (PLAYER_SPOT))
+        ), (self.PLAYER_SPOT))
         enemy_health_rect = pygame.Rect(
             screen_size[0] * 0.65, 
             screen_size[1] * 0.40, 
@@ -225,6 +232,18 @@ class Battle(Scene):
         main_s.blit(
             player_health_text, (player_health_rect.left + 10, player_health_rect.top + 5)
         )
+
+        self.process_alerts(main_s)
+
+    def process_alerts(self, main_s):
+        for i, alert in enumerate(self.alerts):
+            alert.update()
+            alert.draw(main_s)
+            if (alert.should_be_dead()):
+                self.alerts.splice(i, 1)
+
+
+
         
 class Ded(Scene):
     def __init__(self):

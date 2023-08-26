@@ -8,6 +8,7 @@ figure out bard mechanics
 caster mechanics
 
 JORDAN DOING:
+creating feedback animation for heals and damage
 
 ROWAN DOING:
 
