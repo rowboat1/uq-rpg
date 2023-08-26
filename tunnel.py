@@ -56,6 +56,8 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     exit()
+                if event.key == pygame.K_EQUALS:
+                    exit()
                 if scene.type == "tunnels":
                     target_location = None
                     if event.key == pygame.K_w:
