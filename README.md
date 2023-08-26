@@ -11,7 +11,6 @@ JORDAN DOING:
 creating feedback animation for heals and damage
 
 ROWAN DOING:
-menu for battles
 
 DONE:
 show rage counter
@@ -21,3 +20,4 @@ figure out good health increase mechanics
 wait till after attack animation for enemy to attack
 player should gain experience
 incorporate level into attacks
+menu for battles

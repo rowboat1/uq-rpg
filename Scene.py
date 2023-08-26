@@ -215,6 +215,23 @@ class Battle(Scene):
         pygame.draw.rect(main_s, "black", player_health_rect)
         pygame.draw.rect(main_s, "red", enemy_current_health_rect)
         pygame.draw.rect(main_s, "red", player_current_health_rect)
+
+        for x in range(4):
+            button_rect = pygame.Rect(0, 0, screen_size[0] * 0.2, screen_size[1] * 0.2)
+            try:
+                action_text = f"{x + 1}. {player.battle_actions[x]}"
+            except IndexError:
+                action_text = f"{x + 1}.               "
+            action_text = font.render(action_text, True, "black")
+            print(x, x%2, x//2, (screen_size[0] * 0.25 * x%2), (screen_size[1] * 0.25 * x//2 ))
+            button_rect.topleft = (
+                screen_size[0] * 0.5 + (screen_size[0] * 0.25 * (x%2)),
+                screen_size[1] * 0.5 + (screen_size[1] * 0.25 * (x//2) )
+            )
+            pygame.draw.rect(main_s, "grey", button_rect)
+            main_s.blit(action_text, button_rect.topleft + vec(20, 10))
+
+
         for x in range(player.get_rage_counter()):
             pygame.draw.circle(main_s, "red", (
                 player_current_health_rect.left + (x * 50), 
