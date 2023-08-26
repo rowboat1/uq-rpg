@@ -15,6 +15,7 @@ class Player:
         pass
 
     def take_action(self, x):
+        print(self.battle_actions[x])
         return getattr(self, self.battle_actions[x])()
 
     def get_health_ratio(self):
