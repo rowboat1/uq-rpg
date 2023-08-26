@@ -1,12 +1,12 @@
 TODO:
 figure out good health increase mechanics
+add treasures
 figure out bard mechanics
 
 JORDAN DOING:
-load new level on staircase
 
 ROWAN DOING:
-add treasures
+load new level on staircase
 
 DONE:
 show rage counter

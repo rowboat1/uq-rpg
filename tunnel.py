@@ -47,6 +47,12 @@ def set_scene(type, entities):
         scene = Battle(type, entities, player)
     if type == "tunnels":
         scene = Campaign(N_MONSTERS, MONSTER_IMAGES)
+        player.location = (0,0)
+    if type == "upstairs":
+        pass
+    if type == "downstairs":
+        pass
+
 
 def pop_scene(new_dead = None):
     global scene
@@ -82,9 +88,6 @@ if __name__ == "__main__":
                         new_loc = scene.tilegrid.get(target_location, None)
                         if new_loc:
                             player.set_location(target_location)
-
-                            print (new_loc)
-                            print (scene.tilegrid[(GRID_W, GRID_H)])
                             
                             #check if collision is at end
                             if new_loc == scene.tilegrid[(GRID_W, GRID_H)]:
@@ -94,6 +97,7 @@ if __name__ == "__main__":
                             collided_entity = check_collisions(new_loc)
                             if collided_entity:
                                 collision_event = collided_entity.on_collision()
+                                print(collided_entity)
                                 set_scene(
                                     collision_event["type"], 
                                     collision_event["entities"]

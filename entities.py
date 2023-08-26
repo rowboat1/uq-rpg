@@ -25,6 +25,19 @@ class Enemy:
             "entities": [self]
         }
     
-class Stair:
-    def __init__(self, type):
-        self.type = type
+class DownStair:
+    def __init__(self):
+        pass
+
+    def on_collision(self):
+        return {
+            "type": "tunnels",
+            "entities": []
+        }
+    
+class UpStair:
+    def __init__(self):
+        pass
+    
+    def on_collision(self):
+        pass

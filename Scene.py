@@ -3,7 +3,7 @@ import itertools
 import random
 import pygame
 
-from entities import Enemy, Stair
+from entities import DownStair, Enemy, Stair, UpStair
 from Tile import Tile
 from constants import *
 
@@ -113,7 +113,10 @@ class Campaign(Scene):
         # tilegrid is a map of (x,y) tuples to tile objects
         self.tilegrid = Grid().export()
 
-        self.stair_dict = {(0, 0): Stair('up'), (GRID_W, GRID_H): Stair('down')}
+        self.stair_dict = {
+            self.tilegrid[(0, 0)]: UpStair(), 
+            self.tilegrid[(GRID_W, GRID_H)]: DownStair()
+        }
 
         # don't allow monsters to spawn in the enterance or the exit
         valid_tiles_for_monster_objects = []
@@ -132,20 +135,16 @@ class Campaign(Scene):
 
     
     def check_colliders(self, new_loc):
-
         # sorry, this is a terrible way to do this and I apologize for my sins
 
         monster = self.monster_dict.get(new_loc, None)
-        if (monster):
+        if monster:
             return monster
+        print(new_loc)
+        print(self.stair_dict.keys())
         stair = self.stair_dict.get(new_loc, None)
-        if (stair):
+        if stair:
             return stair
-        
-        
-
-
-
 
     def kill(self, new_dead):
         self.monster_dict = {
