@@ -121,7 +121,7 @@ if __name__ == "__main__":
                             damage_result = scene.damage_enemy(damage)
                             if damage_result == "Battle over":
                                 player.set_current_health(
-                                    player.current_health + 3
+                                    player.current_health + 5
                                 )
                                 player.set_current_experience(
                                     player.current_experience + 2

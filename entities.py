@@ -1,10 +1,10 @@
 import random
 
 class Enemy:
-    def __init__(self, health, damage, image):
-        self.max_health = health
-        self.current_health = health
-        self.damage = damage
+    def __init__(self, image):
+        self.max_health = 12
+        self.current_health = 12
+        self.damage = 6
         self.image = image
 
     def get_action(self):

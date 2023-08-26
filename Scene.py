@@ -130,7 +130,7 @@ class Campaign(Scene):
         # limited list of monster images
         self.monster_dict = {}
         for i, tile in enumerate(tile_objects_where_monsters_will_appear):
-            new_monster = Enemy(random.randrange(6, 15), random.randrange(6, 15), monster_images[i % len(monster_images)])
+            new_monster = Enemy(monster_images[i % len(monster_images)])
             self.monster_dict[tile] = new_monster
 
     
