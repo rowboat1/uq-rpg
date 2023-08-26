@@ -104,6 +104,9 @@ class Scene:
     def get_whose_turn(self):
         pass
 
+    def kill(self):
+        pass
+
 class Campaign(Scene):
     def __init__(self, n_monsters, monster_images):
         self.type = "tunnels" 
@@ -122,6 +125,11 @@ class Campaign(Scene):
             )
             , itertools.cycle(monster_images)))
         )
+
+    def kill(self, new_dead):
+        self.monster_dict = {
+            k:v for k,v in self.monster_dict.items() if v not in new_dead
+        }
 
 class Battle(Scene):
     def __init__(self, type, entities, player):
