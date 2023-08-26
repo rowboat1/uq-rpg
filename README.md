@@ -2,9 +2,10 @@ TODO:
 add treasures
 figure out bard mechanics
 menu for battles
+figure out good health increase mechanics
 
 JORDAN DOING:
-figure out good health increase mechanics
+creating feedback animation for heals and damage
 
 ROWAN DOING:
 load new level on staircase
