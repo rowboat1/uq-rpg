@@ -20,7 +20,8 @@ tilegrid = {
 }
 player = Player(TILESIZE / 2)
 
-monster_tiles = random.sample(list(tilegrid.values()), 10)
+monster_tiles = random.sample(list(
+    filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), 10)
 monster_images = list(map(pygame.image.load, [
     "repogotchi1.png", "repogotchi2.png", "repogotchi3.png", "repogotchi4.png",
 ]))
@@ -31,7 +32,7 @@ monster_dict = dict(zip(monster_tiles, map(
         x
     )
     , itertools.cycle(monster_images))))
-# Remove (0,0)
+
 scene_stack = []
 scene = Scene("tunnels", monster_dict)
 
