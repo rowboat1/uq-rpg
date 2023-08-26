@@ -24,3 +24,7 @@ class Enemy:
             "type": "battle",
             "entities": [self]
         }
+    
+class Stair:
+    def __init__(self, type):
+        self.type = type
