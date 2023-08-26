@@ -135,7 +135,7 @@ class Battle(Scene):
     def __init__(self, type, entities, player):
         super().__init__(type, entities)
         self.turn_tracker = entities + [player]
-        self.turn_pointer = 0
+        self.turn_pointer = 1
 
     def damage_enemy(self, damage):
         enemy = self.entities[0]
