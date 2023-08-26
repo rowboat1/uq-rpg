@@ -2,7 +2,7 @@ from typing import Dict
 import pygame
 from Enemy import Enemy
 from Player import Bard, Fighter, Player, Sorceror
-from Scene import Battle, Scene
+from Scene import Scene, Campaign, Battle
 from Tile import Tile
 import itertools
 import random
@@ -22,11 +22,8 @@ PLAYER_BATTLE_IMAGE = f"assets/player_images/student{player_type}.png"
 PLAYER_TUNNEL_IMAGE = f"assets/player_images/student_tunnel{player_type}.png"
 PLAYER_SPOT = (SCREEN_SIZE[0] * 0.1, SCREEN_SIZE[1] * 0.5)
 PlayerClass = [Fighter, Bard, Sorceror][player_type - 1]
-tilegrid = {
-    (x, y): Tile(x, y, random.choice(["purple", "grey"]), TILESIZE) 
-        for x,y in itertools.product(range(19), range(9))
-        if (x+1) % 2 or (y+1) % 2
-}
+
+
 player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
 class Grid:
@@ -38,14 +35,15 @@ class Grid:
         self.grid_width = 19
         self.grid_height = 8
 
+        self.standard_colours = [pygame.Color(35, 15, 20), pygame.Color(25, 30, 25), pygame.Color(20, 35, 35)]
+
         self.rooms = random.randint(3,6) # number of rooms to generate
         self.room_origins = [] # list of room (x,y) basics
 
         #player origin must always be a tile 
         self.dict[(0,0)] = Tile(0, 0, "yellow", TILESIZE)
 
-        # the end of the level will also be in the bottom right corner
-        self.dict[(self.grid_width,self.grid_height)] = Tile(self.grid_width, self.grid_height, "red", TILESIZE)
+
 
         # get list of room centres
         for n in range(self.rooms):
@@ -55,7 +53,7 @@ class Grid:
 
         # place tiles at room centres
         for origin in self.room_origins:
-            self.dict[origin[0], origin[1]] = Tile(origin[0], origin[1], "grey", TILESIZE)
+            self.dict[origin[0], origin[1]] = Tile(origin[0], origin[1], pygame.Color(35, 35, 35), TILESIZE)
 
         # create paths to room origins
 
@@ -72,33 +70,36 @@ class Grid:
         #path to end
         self.path(self.room_origins[self.rooms-1], (self.grid_width,self.grid_height))
 
+        # the end of the level will also be in the bottom right corner
+        self.dict[(self.grid_width,self.grid_height)] = Tile(self.grid_width, self.grid_height, "red", TILESIZE)
+
 
     def path(self, start, finish):
 
         if start[0]<finish[0]:
             i=1
             while(start[0]+i!=finish[0]+1):
-                self.dict[start[0]+i, start[1]] = Tile(start[0]+i, start[1], "blue", TILESIZE)
+                self.dict[start[0]+i, start[1]] = Tile(start[0]+i, start[1], random.choice(self.standard_colours), TILESIZE)
                 i += 1
 
         if start[0]>finish[0]:
             i=1
             while(start[0]-i!=finish[0]-1):
-                self.dict[start[0]-i, start[1]] = Tile(start[0]-i, start[1], "blue", TILESIZE)
+                self.dict[start[0]-i, start[1]] = Tile(start[0]-i, start[1], random.choice(self.standard_colours), TILESIZE)
                 i += 1
 
 
         if start[1]<finish[1]:
             i=1
             while(start[1]+i!=finish[1]+1):
-                self.dict[finish[0], finish[1]-i] = Tile(finish[0], finish[1]-i, "white", TILESIZE)
+                self.dict[finish[0], finish[1]-i] = Tile(finish[0], finish[1]-i, random.choice(self.standard_colours), TILESIZE)
                 i += 1
 
         
         if start[1]>finish[1]:
             i=1
             while(start[1]-i!=finish[1]-1):
-                self.dict[finish[0], finish[1]+i] = Tile(finish[0], finish[1]+i, "white", TILESIZE)
+                self.dict[finish[0], finish[1]+i] = Tile(finish[0], finish[1]+i, random.choice(self.standard_colours), TILESIZE)
                 i += 1
         
 
@@ -118,9 +119,11 @@ class Grid:
 tilegrid = Grid().export()
 
 
+N_MONSTERS = 10
+
 tile_objects_where_monsters_will_appear = random.sample(list(
-    filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), 10)
-monster_images = list(map(lambda x: 
+    filter(lambda tile: (tile.x, tile.y) != (0, 0), tilegrid.values())), N_MONSTERS)
+MONSTER_IMAGES = list(map(lambda x: 
             pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
 # Gives us a dictionary of tile: monster pairs, equally distributing our 
 # limited list of monster images
@@ -133,11 +136,11 @@ monster_dict: Dict[Tile, Enemy] = dict(zip(
         random.randrange(6, 15), 
         image
     )
-    , itertools.cycle(monster_images)))
+    , itertools.cycle(MONSTER_IMAGES)))
 )
 
 scene_stack = []
-scene = Scene("tunnels", monster_dict)
+scene = Campaign("tunnels", monster_dict, tilegrid)
 
 def check_collisions(new_loc):
     return monster_dict.get(new_loc, None)
@@ -180,7 +183,7 @@ if __name__ == "__main__":
                         # move right
                         target_location = (player.location[0] + 1, player.location[1])
                     if target_location:
-                        new_loc = tilegrid.get(target_location, None)
+                        new_loc = scene.tilegrid.get(target_location, None)
                         if new_loc:
                             player.set_location(target_location)
                             collided_entity = check_collisions(new_loc)
@@ -214,9 +217,9 @@ if __name__ == "__main__":
         if scene.type == "tunnels":
             main_s.fill("black")
             mp = pygame.mouse.get_pos()
-            for tile in tilegrid.values():
+            for tile in scene.tilegrid.values():
                 pygame.draw.rect(main_s, tile.color, tile.rect)
-            main_s.blit(pygame.transform.scale(player.tunnel_image, (TILESIZE, TILESIZE)), tilegrid[player.location].rect.topleft)
+            main_s.blit(pygame.transform.scale(player.tunnel_image, (TILESIZE, TILESIZE)), scene.tilegrid[player.location].rect.topleft)
             for tile, monster in monster_dict.items():
                 main_s.blit(pygame.transform.scale(monster.image, 
                     (TILESIZE, ORIGINAL_SIZE[1] / (ORIGINAL_SIZE[0] / TILESIZE))), 
