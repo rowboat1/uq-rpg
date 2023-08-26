@@ -26,14 +26,18 @@ print(PlayerClass)
 
 player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygame.image.load(PLAYER_TUNNEL_IMAGE))
 
+
+GRID_W = 19
+GRID_H = 8
+
 class Grid:
 
     def __init__(self):
 
         self.dict = {}
 
-        self.grid_width = 19
-        self.grid_height = 8
+        self.grid_width = GRID_W
+        self.grid_height = GRID_H
 
         self.standard_colours = [pygame.Color(35, 15, 20), pygame.Color(25, 30, 25), pygame.Color(20, 35, 35)]
 
@@ -184,6 +188,11 @@ if __name__ == "__main__":
                         new_loc = scene.tilegrid.get(target_location, None)
                         if new_loc:
                             player.set_location(target_location)
+
+                            #check if collision is at end
+                            if new_loc = (GRID_W, GRID_H)
+
+                            # check for collision with enemy
                             collided_entity = check_collisions(new_loc)
                             if collided_entity:
                                 collision_event = collided_entity.on_collision()
@@ -191,6 +200,7 @@ if __name__ == "__main__":
                                     collision_event["type"], 
                                     collision_event["entities"]
                                 )
+
                 elif scene.type == "battle":
                     pass
         if scene.type == "tunnels":
