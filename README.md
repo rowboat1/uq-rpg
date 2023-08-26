@@ -1,9 +1,9 @@
 TODO:
-figure out good health increase mechanics
 add treasures
 figure out bard mechanics
 
 JORDAN DOING:
+figure out good health increase mechanics
 
 ROWAN DOING:
 load new level on staircase

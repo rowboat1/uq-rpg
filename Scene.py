@@ -3,7 +3,7 @@ import itertools
 import random
 import pygame
 
-from entities import DownStair, Enemy, Stair, UpStair
+from entities import DownStair, Enemy, UpStair
 from Tile import Tile
 from constants import *
 
