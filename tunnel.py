@@ -49,7 +49,7 @@ def set_scene(type, entities=None):
     if type == "battle":
         scene = Battle(type, entities, player)
     if type == "tunnels":
-        scene = Campaign(N_MONSTERS, MONSTER_IMAGES)
+        scene = Campaign(N_MONSTERS, MONSTER_IMAGES, MONSTER_BATTLE_IMAGES)
         player.location = (0,0)
     if type == "ded":
         scene = Ded()
