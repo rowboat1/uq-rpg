@@ -11,11 +11,12 @@ class Potion:
         }
 
 class Enemy:
-    def __init__(self, image):
+    def __init__(self, image, battle_image):
         self.max_health = 12
         self.current_health = 12
         self.damage = 6
         self.image = image
+        self.battle_image = battle_image
 
     def get_action(self):
         return random.randrange(self.damage - 1, self.damage + 2)

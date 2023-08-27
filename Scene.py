@@ -108,7 +108,7 @@ class Scene:
         pass
 
 class Campaign(Scene):
-    def __init__(self, n_monsters, monster_images):
+    def __init__(self, n_monsters, monster_images, monster_battle_images):
         self.type = "tunnels" 
         # tilegrid is a map of (x,y) tuples to tile objects
         self.tilegrid = Grid().export()
@@ -130,7 +130,7 @@ class Campaign(Scene):
         # limited list of monster images
         self.monster_dict = {}
         for i, tile in enumerate(tile_objects_where_monsters_will_appear):
-            new_monster = Enemy(monster_images[i % len(monster_images)])
+            new_monster = Enemy(monster_images[i % len(monster_images)], monster_battle_images[i % len(monster_images)])
             self.monster_dict[tile] = new_monster
 
         self.potion_dict = {}
@@ -204,7 +204,7 @@ class Battle(Scene):
 
         main_s.blit(battle_background, (0,0))
         main_s.blit(pygame.transform.scale(
-            self.entities[0].image, 
+            self.entities[0].battle_image, 
             (screen_size[0] * 0.25, screen_size[1] * 0.25)
         ), (self.ENEMY_SPOT))
         main_s.blit(pygame.transform.scale(

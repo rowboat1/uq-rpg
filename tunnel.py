@@ -31,12 +31,14 @@ player = PlayerClass(TILESIZE / 2, pygame.image.load(PLAYER_BATTLE_IMAGE), pygam
 
 N_MONSTERS = 10
 MONSTER_IMAGES = list(map(lambda x: 
-            pygame.image.load(f"assets/monster_images/repogotchi{x}.png"), range(1, 5)))
+            pygame.image.load(f"assets/monster_images/nephilim_tunnel{x}.png"), range(1, 5)))
+MONSTER_BATTLE_IMAGES = list(map(lambda x: 
+            pygame.image.load(f"assets/monster_images/nephilim{x}.png"), range(1, 5)))
 
 
 
 scene_stack = []
-scene = Campaign(N_MONSTERS, MONSTER_IMAGES)
+scene = Campaign(N_MONSTERS, MONSTER_IMAGES, MONSTER_BATTLE_IMAGES)
 
 def check_collisions(new_loc):
     return scene.check_colliders(new_loc)
