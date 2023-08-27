@@ -51,4 +51,7 @@ class UpStair:
         pass
     
     def on_collision(self):
-        pass
+        return {
+            "type": None,
+            "entities": []
+        }
